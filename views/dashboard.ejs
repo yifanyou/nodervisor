@@ -30,7 +30,7 @@
                     }
                 </style>
                 <article style="width: 100%;">
-                    <div class="row-fluid" id="hosts-listing">
+                    <div id="hosts-listing">
                     </div>
                 </article>
 
@@ -49,9 +49,17 @@
                     var keys = Object.keys(hosts);
                     keys.sort();
 
+                    colCount = 1;
+                    var row = null
                     keys.forEach(function(key){
-                        $('#hosts-listing').append(new EJS({url: '/partials/dashboard-listing.ejs'}).render({host: hosts[key].host, processes: hosts[key].data}));
+                        if (colCount == 1) { row = $('<div>').addClass("row-fluid"); }
+                        row.append(new EJS({url: '/partials/dashboard-listing.ejs'}).render({host: hosts[key].host, processes: hosts[key].data}));
+                        if (colCount == 4) { $('#hosts-listing').append(row); colCount = 0; }
+                        colCount++;
+                        console.log(row);
+                        console.log(colCount);
                     });
+                    $('#hosts-listing').append(row);
                 }
             });
         }
