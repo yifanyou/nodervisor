@@ -22,10 +22,11 @@ function routes(params) {
 	/**
 	 * Link routes to items in routes array
 	 */
-	
+
 	// Home page
 	app.get('/', routes['supervisord']());
-	
+	app.get('/dashboard', routes['dashboard']());
+
 	// Hosts page
 	app.get('/hosts', routes['hosts'](params));
 	app.post('/hosts', routes['hosts'](params));

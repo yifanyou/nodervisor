@@ -1,0 +1,60 @@
+<%= include header.ejs %>
+    <% var notLoggedIn = true %>
+    <%= include menu.ejs %>
+    <div class="container" style="width: 100%;">
+        <div class="main-container" style="width: 100%;">
+            <div class="main clearfix">
+                <style media="screen">
+                    .redIcons {
+                        color: #aa2700;
+                    }
+
+                    .greenIcons {
+                        color: #1da13e;
+                    }
+
+                    .smallIcon {
+                        font-size: 38px;
+                    }
+
+                    .largeIcon {
+                        font-size: 72px;
+                    }
+
+                    .blueIcons {
+                        color: #2260e3;
+                    }
+                </style>
+                <article style="width: 100%;">
+                    <div class="row-fluid" id="hosts-listing">
+                    </div>
+                </article>
+
+            </div> <!-- #main -->
+        </div> <!-- #main-container -->
+    </div>
+    <script type="text/javascript">
+        function updateList() {
+            $.ajax({
+                url: '/ajax/supervisord',
+                type: 'get',
+                dataType: 'json',
+                success: function(hosts){
+                    $('#hosts-listing').html('');
+
+                    var keys = Object.keys(hosts);
+                    keys.sort();
+
+                    keys.forEach(function(key){
+                        $('#hosts-listing').append(new EJS({url: '/partials/dashboard-listing.ejs'}).render({host: hosts[key].host, processes: hosts[key].data}));
+                    });
+                }
+            });
+        }
+
+        $(document).ready(function(){
+            updateList();
+            var updateInterval = setInterval('updateList()', 15000);
+        });
+    </script>
+<%= include footer.ejs %>

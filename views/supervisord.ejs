@@ -1,21 +1,23 @@
 <%= include header.ejs %>
     <%= include menu.ejs %>
-    <div class="main-container">
-        <div class="main clearfix">
+    <div class="container">
+        <div class="main-container">
+            <div class="main clearfix">
 
-            <article>
-                <h2>All Hosts</h2>
-                <button type="button" id="refresh-toggle" class="btn btn-labeled btn-success active pull-right" style="margin-top: -50px;">
-                    <span class="btn-label"><i class="glyphicon glyphicon-refresh"></i></span>
-                    <span class="btn-text">Refresh on</span>
-                </button>
-                <hr>
-                <div id="hosts-listing">
-                </div>
-            </article>
+                <article>
+                    <h2>All Hosts</h2>
+                    <button type="button" id="refresh-toggle" class="btn btn-labeled btn-success active pull-right" style="margin-top: -50px;">
+                        <span class="btn-label"><i class="glyphicon glyphicon-refresh"></i></span>
+                        <span class="btn-text">Refresh on</span>
+                    </button>
+                    <hr>
+                    <div id="hosts-listing">
+                    </div>
+                </article>
 
-        </div> <!-- #main -->
-    </div> <!-- #main-container -->
+            </div> <!-- #main -->
+        </div> <!-- #main-container -->
+    </div>
     <script type="text/javascript">
         var refresh = true;
         var hostTablesCollapse = [];

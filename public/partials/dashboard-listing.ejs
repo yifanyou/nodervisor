@@ -1,0 +1,43 @@
+<%
+var hostSummary = [];
+if (typeof processes != 'undefined') {
+    for (var i = 0; i < processes.length; i++) {
+
+        if (!hostSummary[processes[i].statename]) {
+            hostSummary[processes[i].statename] = 1;
+        } else {
+            hostSummary[processes[i].statename]++;
+        }
+    }
+}
+%>
+<div class="span3 well well-small">
+    <h2 style="margin-top: 0px;"><%= host.Name %></h2>
+    <div class="row-fluid">
+        <div class="span4">
+            <div class="row-fluid">
+                <div class="span12">
+                    <% if ((hostSummary['FATAL'] > 0) && (hostSummary['RUNNING'] > 0)) { %>
+                        <span class="greenIcons smallIcon"><i class="fa fa-check-circle"></i> <%= hostSummary['RUNNING'] %></span>
+                    <% } %>
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span12">
+                    <% if (hostSummary['STOPPED'] > 0) { %>
+                        <span class="blueIcons smallIcon"><i class="fa fa-times-circle"></i> <%= hostSummary['STOPPED'] %></span>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <div class="span8" style="text-align: center;">
+            <% if (hostSummary['FATAL'] > 0){ %>
+                <span class="redIcons largeIcon"><i class="fa fa-exclamation-circle"></i> <%= hostSummary['FATAL'] %></span>
+            <% } else if (hostSummary['RUNNING'] > 0) { %>
+                <span class="greenIcons largeIcon"><i class="fa fa-check-circle"></i> <%= hostSummary['RUNNING'] %></span>
+            <% } else if (processes['errno']) { %>
+                <span class="redIcons largeIcon"><i class="fa fa-bolt"></i></span>
+            <% } %>
+        </div>
+    </div>
+</div>
