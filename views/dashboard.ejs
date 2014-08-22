@@ -1,5 +1,5 @@
 <%= include header.ejs %>
-    <% var notLoggedIn = true %>
+    <% var hideMenu = true %>
     <%= include menu.ejs %>
     <div class="container" style="width: 100%;">
         <div class="main-container" style="width: 100%;">
@@ -13,20 +13,32 @@
                         color: #1da13e;
                     }
 
-                    .smallIcon {
-                        font-size: 38px;
-                    }
-
-                    .largeIcon {
-                        font-size: 72px;
-                    }
-
                     .blueIcons {
                         color: #1641c4;
                     }
 
                     .goldIcons {
                         color: #f0b120;
+                    }
+
+                    @media only screen and (min-width: 780px) {
+                        .smallIcon {
+                            font-size: 24px;
+                        }
+
+                        .largeIcon {
+                            font-size: 48px;
+                        }
+                    }
+
+                    @media only screen and (min-width: 1281px) {
+                        .smallIcon {
+                            font-size: 38px;
+                        }
+
+                        .largeIcon {
+                            font-size: 72px;
+                        }
                     }
                 </style>
                 <article style="width: 100%;">
@@ -56,8 +68,6 @@
                         row.append(new EJS({url: '/partials/dashboard-listing.ejs'}).render({host: hosts[key].host, processes: hosts[key].data}));
                         if (colCount == 4) { $('#hosts-listing').append(row); colCount = 0; }
                         colCount++;
-                        console.log(row);
-                        console.log(colCount);
                     });
                     $('#hosts-listing').append(row);
                 }

@@ -2,7 +2,7 @@
 var hostSummary = [];
 if (typeof processes != 'undefined') {
     for (var i = 0; i < processes.length; i++) {
-        
+
         if (!hostSummary[processes[i].statename]) {
             hostSummary[processes[i].statename] = 1;
         } else {
@@ -112,7 +112,6 @@ for (state in hostSummary) {
                             }
                         }
                     %>
-                    <button type="button" class="btn btn-info process-info-btn"><i class="glyphicon glyphicon-info-sign"></i></button>
                     <a href="/log/<%= host.idHost %>/<%= processes[i].name %>/out" class="btn btn-default"><i class="glyphicon glyphicon-tasks"></i></a>
                 </td>
             </tr>
