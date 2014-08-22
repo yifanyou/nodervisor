@@ -8,12 +8,12 @@
 	                	if (typeof session.user != 'undefined') {
 	                		if (session.user.Role == 'Admin') {
                 			%>
-                                <li><a href="/dashboard">Dash</a></li>
 			                	<li><a href="/hosts">Hosts</a></li>
 			                	<li><a href="/users">Users</a></li>
 	                		<%
 	                		}
                             %>
+                            <li><a href="/dashboard">Dash</a></li>
                             <li><a href="/logout">Logout</a></li>
                             <%
 						}
