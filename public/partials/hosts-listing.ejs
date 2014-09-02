@@ -31,7 +31,11 @@ for (state in hostSummary) {
     summaryLabel += ' <span class="label label-' + stateColor + '">' + hostSummary[state] + '</span>';
 }
 %>
-<h4 ><%= host.Name + ' ' + summaryLabel %></h4>
+<h4 >
+<%= host.Name %>
+<%= host.GroupName != null ? '<span class="label label-default">' + host.GroupName + '</span>' : '' %>
+<%= summaryLabel %>
+</h4>
 <% if (!error) { %>
     <button type="button" data-table="<%= host.idHost %>" class="btn pull-right table-collapse" style="margin-top: -47px;"><i class="glyphicon glyphicon-collapse-<%= hostCollapsed %>"></i></button>
     <%
