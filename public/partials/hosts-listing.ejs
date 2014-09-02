@@ -1,5 +1,5 @@
 <%
-var hostSummary = [];
+var hostSummary = {};
 if (typeof processes != 'undefined') {
     for (var i = 0; i < processes.length; i++) {
 
@@ -10,11 +10,15 @@ if (typeof processes != 'undefined') {
         }
     }
 }
-
-var summaryLabel = '';
+sortedstatuses = [];
 for (state in hostSummary) {
+    sortedstatuses.push(state);
+}
+sortedstatuses.sort();
+var summaryLabel = '';
+for (state in sortedstatuses) {
     var stateColor = 'info';
-    switch (state) {
+    switch (sortedstatuses[state]) {
         case 'RUNNING': {
             stateColor = 'success';
         }
@@ -28,7 +32,7 @@ for (state in hostSummary) {
         }
         break;
     }
-    summaryLabel += ' <span class="label label-' + stateColor + '">' + hostSummary[state] + '</span>';
+    summaryLabel += ' <span class="label label-' + stateColor + '">' + hostSummary[sortedstatuses[state]] + '</span>';
 }
 %>
 <h4 >
