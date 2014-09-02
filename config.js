@@ -9,27 +9,27 @@ var config = {};
 // --
 // Mysql Config:
 //
-config.db = {
-	client: 'mysql',
-	connection: {
-		host: 'localhost',
-		user: 'root',
-		password: '',
-		database: 'nodervisor2',
-		charset: 'utf8',
-	}
-};
+// config.db = {
+// 	client: 'mysql',
+// 	connection: {
+// 		host: 'localhost',
+// 		user: 'root',
+// 		password: '',
+// 		database: 'nodervisor',
+// 		charset: 'utf8',
+// 	}
+// };
 //
 // --
 // We're using Sqlite by default now.
 // Sqlite config:
 //
-// config.db = {
-// 	client: 'sqlite3',
-// 	connection: {
-// 		filename: './nodervisor.sqlite'
-// 	}
-// };
+config.db = {
+	client: 'sqlite3',
+	connection: {
+		filename: './nodervisor.sqlite'
+	}
+};
 // End of Database config
 
 // Session storage config
