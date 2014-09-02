@@ -4,7 +4,7 @@
 
 exports.login = function(params) {
 	return function(req, res) {
-		
+
 		if (req.session.loggedIn) {
 			res.redirect('/');
 		}
@@ -15,13 +15,13 @@ exports.login = function(params) {
 				.where('Email', email)
 				.exec(function(err, user){
 					var error = 'Password failed';
-					if (user !== null) {
+					if (!err && (user.length > 0)) {
 						bcrypt = require('bcrypt');
 						req.session.loggedIn = bcrypt.compareSync(req.body.password, user[0].Password);
 					} else {
 						error = 'Email not found';
 					}
-					
+
 					if (!req.session.loggedIn) {
 						res.render('login', {
 							title: 'Nodervisor - Login',

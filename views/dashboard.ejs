@@ -61,11 +61,31 @@
                     var keys = Object.keys(hosts);
                     keys.sort();
 
+                    var groupedHosts = {};
+                    keys.forEach(function(key){
+                        groupname = hosts[key].host.GroupName;
+                        if (groupname != null){
+                            groupprocesses = []
+                            if (groupedHosts[groupname]){
+                                groupprocesses = groupedHosts[groupname].data;
+                            }
+                            groupedHosts[groupname] = {
+                                'host': {
+                                    'Name': groupname
+                                },
+                                'data': groupprocesses.concat(hosts[key].data)
+                            }
+                        } else {
+                            groupedHosts[hosts[key].host.Name] = hosts[key];
+                        }
+                    });
+                    keys = Object.keys(groupedHosts);
+
                     colCount = 1;
                     var row = null
                     keys.forEach(function(key){
                         if (colCount == 1) { row = $('<div>').addClass("row-fluid"); }
-                        row.append(new EJS({url: '/partials/dashboard-listing.ejs'}).render({host: hosts[key].host, processes: hosts[key].data}));
+                        row.append(new EJS({url: '/partials/dashboard-listing.ejs'}).render({host: groupedHosts[key].host, processes: groupedHosts[key].data}));
                         if (colCount == 6) { $('#hosts-listing').append(row); colCount = 0; }
                         colCount++;
                     });

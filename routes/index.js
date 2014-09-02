@@ -31,6 +31,18 @@ function routes(params) {
 	app.get('/hosts', routes['hosts'](params));
 	app.post('/hosts', routes['hosts'](params));
 
+	// Host edit page
+	app.get('/host/:idHost', routes['hosts'](params));
+	app.post('/host/:idHost', routes['hosts'](params))
+
+	// Groups page
+	app.get('/groups', routes['groups'](params));
+	app.post('/groups', routes['groups'](params));
+
+	// Group edit page
+	app.get('/group/:idGroup', routes['groups'](params));
+	app.post('/group/:idGroup', routes['groups'](params))
+
 	// Users page
 	app.get('/users', routes['users'](params));
 	app.post('/users', routes['users'](params));

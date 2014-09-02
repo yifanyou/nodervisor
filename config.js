@@ -1,14 +1,48 @@
 var config = {};
 
-// Db
+// Database configuration params.
+// These are the connection parameters passed to our Knex db wrapper.
+// Uncomment/Comment one of the below to switch between either Mysql or Sqlite.
+// The format for this object is taken directly from Knex's connection object.
+// Refer to the following if you wish to use PostgreSQL or connection pooling.
+// http://knexjs.org/#Installation-client
+// --
+// Mysql Config:
+//
 config.db = {
-	host: 'localhost',
-	user: 'root',
-	pass: '',
-	name: 'nodervisor',
+	client: 'mysql',
+	connection: {
+		host: 'localhost',
+		user: 'root',
+		password: '',
+		database: 'nodervisor2',
+		charset: 'utf8',
+	}
+};
+//
+// --
+// We're using Sqlite by default now.
+// Sqlite config:
+//
+// config.db = {
+// 	client: 'sqlite3',
+// 	connection: {
+// 		filename: './nodervisor.sqlite'
+// 	}
+// };
+// End of Database config
+
+// Session storage config
+// We're using Knex as with the db above, but only using sqlite and not mysql
+// The express-session-knex module seems to have issues with mysql locks.
+config.sessionstore = {
+	client: 'sqlite3',
+	connection: {
+		filename: './nv-sessions.sqlite'
+	}
 };
 
-// Application
+// Application env config
 config.port = 3000;
 config.env = 'production';
 config.sessionSecret = '1234567890ABCDEF';
@@ -18,7 +52,7 @@ config.readHosts = function(db, callback){
 	var query = db('hosts')
 		.join('groups', 'hosts.idGroup', '=', 'groups.idGroup', 'left')
 		.select('hosts.idHost', 'hosts.Name', 'hosts.Url', 'groups.Name AS GroupName');
-	
+
 	query.exec(function(err, data){
 		var hosts = {};
 		for (var host in data) {
@@ -28,36 +62,6 @@ config.readHosts = function(db, callback){
 		// Call the callback passed
 		if (callback) {
 			callback();
-		}
-	});
-};
-
-config.writeHosts = function(db, newHosts, callback){
-	var async = require('async');
-	var hostIds = [];
-	async.each(newHosts, function(host, callback){
-		if (host.idHost == '0') {
-			db('hosts').insert({Name: host.Name, Url: host.Url}).exec(function(err, id){
-				hostIds.push(Number(id));
-				return callback(err);
-			});
-		} else {
-			db('hosts').where('idHost', host.idHost).update({Name: host.Name, Url: host.Url}).exec(function(err){
-				hostIds.push(parseInt(host.idHost, 10));
-				return callback(err);
-			});
-		}
-	}, function(err){
-		if (err) {
-			callback(err);
-		} else {
-			db('hosts').whereNotIn('idHost', hostIds).delete().exec(function(err){
-				if (err) {
-					callback(err);
-				} else {
-					config.readHosts(db, callback);
-				}
-			});
 		}
 	});
 };

@@ -1,45 +1,44 @@
 <%
-var hostSummary = [];
-if (typeof processes != 'undefined') {
-    for (var i = 0; i < processes.length; i++) {
-
-        if (!hostSummary[processes[i].statename]) {
-            hostSummary[processes[i].statename] = 1;
-        } else {
-            hostSummary[processes[i].statename]++;
-        }
+    var hostSummary = [];
+    var styles = {
+        'CONERR': ['redIcons', 'fa fa-bolt'],
+        'FATAL': ['redIcons', 'fa fa-exclamation-circle'],
+        'STARTING': ['goldIcons', 'fa fa-refresh'],
+        'RUNNING': ['greenIcons', 'fa fa-check-circle'],
+        'STOPPED': ['blueIcons', 'fa fa-minus-circle']
     }
-}
+    if (typeof processes != 'undefined') {
+        for (var i = 0; i < processes.length; i++) {
+            if (processes[i].errno) {
+                hostSummary['CONERR'] = 'NA';
+            } else{
+                if (!hostSummary[processes[i].statename]) {
+                    hostSummary[processes[i].statename] = 1;
+                } else {
+                    hostSummary[processes[i].statename]++;
+                }
+            }
+        }
+        sortedStatuses = [];
+        for (status in hostSummary) {
+            sortedStatuses.push([status, hostSummary[status]]);
+        }
+        statusOrder = ['CONERR', 'FATAL', 'STARTING', 'RUNNING', 'STOPPED'];
+        sortedStatuses.sort(function(a, b){
+            if (statusOrder.indexOf(a[0]) < statusOrder.indexOf(b[0])) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+        displayStatus = sortedStatuses[0][0];
+    }
 %>
 <div class="span2 well well-small">
     <h2 style="margin-top: 0px;"><%= host.Name %></h2>
     <div class="row-fluid">
-        <div class="span4">
-            <div class="row-fluid">
-                <div class="span12">
-                    <% if (((hostSummary['FATAL'] > 0) || (hostSummary['STARTING'] > 0)) && (hostSummary['RUNNING'] > 0)) { %>
-                        <span class="greenIcons smallIcon"><i class="fa fa-check-circle"></i> <%= hostSummary['RUNNING'] %></span>
-                    <% } %>
-                </div>
-            </div>
-            <div class="row-fluid">
-                <div class="span12">
-                    <% if (hostSummary['STOPPED'] > 0) { %>
-                        <span class="blueIcons smallIcon"><i class="fa fa-times-circle"></i> <%= hostSummary['STOPPED'] %></span>
-                    <% } %>
-                </div>
-            </div>
-        </div>
-        <div class="span8" style="text-align: center;">
-            <% if (hostSummary['FATAL'] > 0){ %>
-                <span class="redIcons largeIcon"><i class="fa fa-exclamation-circle"></i> <%= hostSummary['FATAL'] %></span>
-            <% } else if (hostSummary['STARTING'] > 0) { %>
-                <span class="goldIcons largeIcon"><i class="fa fa-refresh"></i> <%= hostSummary['STARTING'] %></span>
-            <% } else if (hostSummary['RUNNING'] > 0) { %>
-                <span class="greenIcons largeIcon"><i class="fa fa-check-circle"></i> <%= hostSummary['RUNNING'] %></span>
-            <% } else if (processes['errno']) { %>
-                <span class="redIcons largeIcon"><i class="fa fa-bolt"></i></span>
-            <% } %>
+        <div class="span12" style="text-align: center;">
+            <span class="<%= styles[displayStatus][0] %> largeIcon"><i class="<%= styles[displayStatus][1] %>"> <%= sortedStatuses[0][1] %></i></span>
         </div>
     </div>
 </div>
