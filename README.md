@@ -1,7 +1,7 @@
 nodervisor
 ==========
 
-Supervisor manager in node.js
+A Supervisord manager in node.js. Nodervisor provides a real-time web dashboard for processes running under [supervisord](http://supervisord.org/) across multiple hosts. You can stop and start individual processes, restart all the processes on a host, view logs for a process in real-time, and put a dashboard up for a quick overall summary of your services.
 
 ### Requirements
 
@@ -42,3 +42,9 @@ Supervisor manager in node.js
       port = *:9009 ;
 
   At this point, navigating back to the home page should show you a list of your hosts, and the processes running on them.
+
+### Screenshots
+
+  ![List of hosts with summary](/../screenshots/screenshots/screenshot1.png?raw=true "List of hosts with summary")
+  ![Dashboard view with groups](/../screenshots/screenshots/screenshot2.png?raw=true "Dashboard view with groups")
+  ![View logs directly](/../screenshots/screenshots/screenshot3.png?raw=true "View logs directly")
