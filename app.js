@@ -5,7 +5,9 @@
 
 var express = require('express'),
 	path = require('path'),
-	config = require('./config');
+	config = require('./config'),
+	schema = require('./sql/schema'),
+	sessionstore = require('connect-session-knex')(express);
 
 // Express App Server
 var app = express();
@@ -17,18 +19,12 @@ app.set('view engine', 'ejs');
 app.set('env', config.env);
 
 var Knex = require('knex');
-var db = Knex.initialize({
-	client: 'mysql',
-	connection: {
-		host     : config.db.host,
-		user     : config.db.user,
-		password : config.db.pass,
-		database : config.db.name,
-		charset  : 'utf8'
-	}
-});
+var db = Knex.initialize(config.db);
 
+schema.create(db);
 config.readHosts(db);
+
+var knexsessions = Knex.initialize(config.sessionstore);
 
 /**
  * Set up Middleware
@@ -38,7 +34,11 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser());
-app.use(express.session({secret: config.sessionSecret}));
+app.use(express.session({
+	secret: config.sessionSecret,
+	cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 },
+	store: new sessionstore({knex: knexsessions, tablename: 'sessions'})
+}));
 app.use(app.router);
 app.use(require('stylus').middleware(__dirname + '/public'));
 app.use(express.static(path.join(__dirname, 'public')));

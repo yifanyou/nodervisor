@@ -1,18 +1,20 @@
 {
   "name": "nodervisor",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node app"
   },
   "dependencies": {
+    "async": "0.9.0",
+    "bcrypt": "0.8.0",
+    "connect-session-knex": "0.0.2",
+    "ejs": "1.0.0",
     "express": "3.4.4",
-    "ejs": "*",
-    "stylus": "*",
-    "supervisord": "*",
-    "async": "*",
-    "mysql": "*",
-    "knex": "*",
-    "bcrypt": "*"
+    "knex": "0.6.22",
+    "mysql": "2.4.2",
+    "sqlite3": "^2.2.7",
+    "stylus": "0.47.3",
+    "supervisord": "0.0.4"
   }
 }

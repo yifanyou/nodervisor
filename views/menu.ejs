@@ -1,24 +1,26 @@
 <div class="header-container">
     <header class="header-wrapper clearfix">
-        <h1 class="title">Nodervisor</h1>
-        <% if (typeof notLoggedIn == 'undefined') { %>
+        <h1 class="title"><a href="/" style="text-decoration: none; color: white;">Nodervisor</a></h1>
+        <% if ((typeof notLoggedIn == 'undefined') && (typeof hideMenu == 'undefined')) { %>
 	        <nav>
 	            <ul>
-	                <li><a href="/">Home</a></li>
 	                <%
 	                	if (typeof session.user != 'undefined') {
 	                		if (session.user.Role == 'Admin') {
                 			%>
-			                	<li><a href="/hosts">Hosts</a></li>
-			                	<li><a href="/users">Users</a></li>
+                                <li><a href="/hosts">Hosts</a></li>
+                                <li><a href="/groups">Groups</a></li>
+                                <li><a href="/users">Users</a></li>
 	                		<%
 	                		}
+                            %>
+                            <li><a href="/dashboard">Dash</a></li>
+                            <li><a href="/logout">Logout</a></li>
+                            <%
 						}
 	                %>
-	                <li><a href="/logout">Logout</a></li>
 	            </ul>
 	        </nav>
 	    <% } %>
     </header>
 </div>
-<div class="container">

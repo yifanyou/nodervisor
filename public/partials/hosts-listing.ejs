@@ -1,8 +1,8 @@
 <%
-var hostSummary = [];
+var hostSummary = {};
 if (typeof processes != 'undefined') {
     for (var i = 0; i < processes.length; i++) {
-        
+
         if (!hostSummary[processes[i].statename]) {
             hostSummary[processes[i].statename] = 1;
         } else {
@@ -10,11 +10,15 @@ if (typeof processes != 'undefined') {
         }
     }
 }
-
-var summaryLabel = '';
+sortedstatuses = [];
 for (state in hostSummary) {
+    sortedstatuses.push(state);
+}
+sortedstatuses.sort();
+var summaryLabel = '';
+for (state in sortedstatuses) {
     var stateColor = 'info';
-    switch (state) {
+    switch (sortedstatuses[state]) {
         case 'RUNNING': {
             stateColor = 'success';
         }
@@ -28,10 +32,16 @@ for (state in hostSummary) {
         }
         break;
     }
-    summaryLabel += ' <span class="label label-' + stateColor + '">' + hostSummary[state] + '</span>';
+    summaryLabel += ' <span class="label label-' + stateColor + '">' + hostSummary[sortedstatuses[state]] + '</span>';
 }
 %>
-<h4 ><%= host.Name + ' ' + summaryLabel %></h4>
+<h4 >
+    <div class="row">
+        <div class="span2"><%= host.Name %></div>
+        <div class="span2"><%= summaryLabel %></div>
+        <div class="span2"><%= host.GroupName != null ? '<span class="label label-default">' + host.GroupName + '</span>' : '' %></div>
+    </div>
+</h4>
 <% if (!error) { %>
     <button type="button" data-table="<%= host.idHost %>" class="btn pull-right table-collapse" style="margin-top: -47px;"><i class="glyphicon glyphicon-collapse-<%= hostCollapsed %>"></i></button>
     <%
@@ -112,7 +122,6 @@ for (state in hostSummary) {
                             }
                         }
                     %>
-                    <button type="button" class="btn btn-info process-info-btn"><i class="glyphicon glyphicon-info-sign"></i></button>
                     <a href="/log/<%= host.idHost %>/<%= processes[i].name %>/out" class="btn btn-default"><i class="glyphicon glyphicon-tasks"></i></a>
                 </td>
             </tr>

@@ -9,54 +9,88 @@ exports.hosts = function(params) {
 
 		if ((!req.session.loggedIn) || (req.session.user.Role != 'Admin')) {
 			res.redirect('/login');
-		}
+		} else if (req.body.delete !== undefined) {
+			if (req.params.idHost) {
+				params.db('hosts').delete()
+				.where('id', req.params.idHost)
+				.exec(function() {
+					params.config.readHosts(params.db, function(){
+						res.redirect('/hosts');
+					});
+				});
+			}
+		} else if (req.body.submit !== undefined) {
+			if (req.params.idHost == 'new') {
+				params.db('hosts').insert({
+					Name: req.body.name,
+					Url: req.body.url,
+					idGroup: req.body.group,
+				}, 'idHost').exec(function(err, insertId){
+					params.config.readHosts(params.db, function(){
+						if (err !== null) {
+							console.log(err);
+							res.redirect('/hosts');
+						} else {
+							res.redirect('/host/' + insertId);
+						}
+					});
+				});
+			} else {
+				var info = {
+					Name: req.body.name,
+					Url: req.body.url,
+					idGroup: req.body.group !== 'null' ? req.body.group : 0
+				};
 
-		var saved = false;
-		var hosts = params.config.hosts;
-		
-		if (req.body.submit !== undefined) {
-			var newHosts = [];
-			if (req.body.host !== undefined) {
-				// Using the posted data to actually construct the data objects to pass to db writes.
-				// Because its easier this way. (and it used to be stored in json file)
-				if (req.body.host.idHost instanceof Array) {
-					for (var i = 0; i < req.body.host.idHost.length; i++) {
-						newHosts.push({
-							idHost: req.body.host.idHost[i],
-							Name: req.body.host.Name[i],
-							Url: req.body.host.Url[i]
+				console.log(info);
+
+				params.db('hosts').update(info)
+				.where('idHost', req.params.idHost)
+				.exec(function() {
+					params.config.readHosts(params.db, function(){
+						res.redirect('/host/' + req.params.idHost);
+					});
+				});
+			}
+		} else {
+			var qry = params.db('hosts');
+
+			if (req.params.idHost) {
+				if (req.params.idHost == 'new') {
+					qry = params.db('groups').select('idGroup', 'Name');
+					qry.exec(function(err, groups){
+						res.render('edit_host', {
+							title: 'Nodervisor - New Host',
+							host: null,
+							groups: groups,
+							session: req.session
 						});
-					}
+					});
 				} else {
-					newHosts.push({
-						idHost: req.body.host.idHost,
-						Name: req.body.host.Name,
-						Url: req.body.host.Url
+					qry.where('idHost', req.params.idHost)
+					.exec(function(err, host){
+						qry = params.db('groups').select('idGroup', 'Name');
+						qry.exec(function(err, groups){
+							res.render('edit_host', {
+								title: 'Nodervisor - Edit Host',
+								host: host[0],
+								groups: groups,
+								session: req.session
+							});
+						});
 					});
 				}
-			}
-
-			// Save and render
-			params.config.writeHosts(db, newHosts, function(err){
-				if (!err){
-					saved = true;
-				}
-				res.render('hosts', {
-					title: 'Nodervisor - Hosts',
-					hosts: params.config.hosts,
-					saved: saved,
-					error: err,
-					session: req.session
+			} else {
+				qry.join('groups', 'hosts.idGroup', '=', 'groups.idGroup', 'left')
+				.select('hosts.idHost', 'hosts.Name', 'hosts.Url', 'groups.Name AS GroupName')
+				.exec(function(err, hosts){
+					res.render('hosts', {
+						title: 'Nodervisor - Hosts',
+						hosts: hosts,
+						session: req.session
+					});
 				});
-			});
-		} else {
-			res.render('hosts', {
-				title: 'Nodervisor - Hosts',
-				hosts: hosts,
-				saved: saved,
-				error: null,
-				session: req.session
-			});
+			}
 		}
 	};
 };
