@@ -24,7 +24,7 @@
         for (status in hostSummary) {
             sortedStatuses.push([status, hostSummary[status]]);
         }
-        statusOrder = ['CONERR', 'FATAL', 'STARTING', 'RUNNING', 'STOPPED'];
+        statusOrder = ['CONERR', 'FATAL', 'STARTING', 'RUNNING', 'STOPPED', 'BACKOFF'];
         sortedStatuses.sort(function(a, b){
             if (statusOrder.indexOf(a[0]) < statusOrder.indexOf(b[0])) {
                 return -1;
