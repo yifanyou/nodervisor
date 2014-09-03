@@ -38,7 +38,7 @@ Supervisor manager in node.js
   5. Navigate to the hosts page using the top menu. Then add a host running supervisord using the form. Your supervisord config on each host should be set up to allow the xmlrpc interface over a inet port.
   For instance:
 
-    [inet_http_server]
-    port = *:9009 ;
+      [inet_http_server]
+      port = *:9009 ;
 
   At this point, navigating back to the home page should show you a list of your hosts, and the processes running on them.
