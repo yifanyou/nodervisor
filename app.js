@@ -7,7 +7,15 @@ var express = require('express'),
 	path = require('path'),
 	config = require('./config'),
 	schema = require('./sql/schema'),
-	sessionstore = require('connect-session-knex')(express);
+	session = require('express-session'),
+	favicon = require('serve-favicon'),
+	bodyParser = require('body-parser'),
+	morgan = require('morgan'),
+	cookieParser = require('cookie-parser'),
+	methodOverride = require('method-override'),
+	errorHandler = require('errorhandler'),
+	serveStatic = require('serve-static'),
+  sessionstore = require('connect-session-knex')(session);
 
 // Express App Server
 var app = express();
@@ -18,34 +26,34 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 app.set('env', config.env);
 
-var Knex = require('knex');
-var db = Knex.initialize(config.db);
+var db = require('knex')(config.db);
+//var db = Knex.initialize(config.db);
 
 schema.create(db);
 config.readHosts(db);
 
-var knexsessions = Knex.initialize(config.sessionstore);
+var knexsessions = require('knex')(config.sessionstore);
 
 /**
  * Set up Middleware
  */
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(express.cookieParser());
-app.use(express.session({
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(morgan('dev'));
+app.use(bodyParser());
+app.use(methodOverride());
+app.use(cookieParser());
+app.use(session({
 	secret: config.sessionSecret,
 	cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 },
 	store: new sessionstore({knex: knexsessions, tablename: 'sessions'})
 }));
-app.use(app.router);
+//app.use(app.router);
 app.use(require('stylus').middleware(__dirname + '/public'));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(serveStatic(path.join(__dirname, 'public')));
 
 // Middleware for Dev Env only
 if ('development' == app.get('env')) {
-  app.use(express.errorHandler());
+  app.use(errorHandler());
 }
 
 var supervisordapi = require('supervisord');

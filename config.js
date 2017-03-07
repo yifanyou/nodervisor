@@ -53,7 +53,7 @@ config.readHosts = function(db, callback){
 		.join('groups', 'hosts.idGroup', '=', 'groups.idGroup', 'left')
 		.select('hosts.idHost', 'hosts.Name', 'hosts.Url', 'groups.Name AS GroupName');
 
-	query.exec(function(err, data){
+	query.then(function(err, data){
 		var hosts = {};
 		for (var host in data) {
 			hosts[data[host].idHost] = data[host];
