@@ -1,3 +1,8 @@
+My work upon the nodervisor
+  1. update dependencies and fix code
+
+
+
 nodervisor
 ==========
 
