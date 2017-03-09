@@ -13,7 +13,7 @@ exports.groups = function(params) {
 			if (req.params.idGroup) {
 				params.db('groups').delete()
 				.where('idGroup', req.params.idGroup)
-				.exec(function() {
+				.then(function() {
 					res.redirect('/groups');
 				});
 			}
@@ -21,7 +21,7 @@ exports.groups = function(params) {
 			if (req.params.idGroup == 'new') {
 				params.db('groups').insert({
 					Name: req.body.name,
-				}, 'idGroup').exec(function(err, insertId){
+				}, 'idGroup').then(function(insertId, err){
 					if (err !== null) {
 						console.log(err);
 						res.redirect('/groups');
@@ -36,7 +36,7 @@ exports.groups = function(params) {
 
 				params.db('groups').update(info)
 				.where('idGroup', req.params.idGroup)
-				.exec(function() {
+				.then(function() {
 					res.redirect('/group/' + req.params.idGroup);
 				});
 			}
@@ -52,7 +52,7 @@ exports.groups = function(params) {
 					});
 				} else {
 					qry.where('idGroup', req.params.idGroup)
-					.exec(function(err, group){
+					.then(function(group, err){
 						res.render('edit_group', {
 							title: 'Nodervisor - Edit Group',
 							group: group[0],
@@ -61,7 +61,7 @@ exports.groups = function(params) {
 					});
 				}
 			} else {
-				qry.exec(function(err, groups){
+				qry.then(function(groups, err){
 					res.render('groups', {
 						title: 'Nodervisor - Groups',
 						groups: groups,

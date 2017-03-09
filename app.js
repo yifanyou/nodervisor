@@ -39,13 +39,18 @@ var knexsessions = require('knex')(config.sessionstore);
  */
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(morgan('dev'));
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
+app.use(bodyParser.json());
 app.use(methodOverride());
 app.use(cookieParser());
 app.use(session({
 	secret: config.sessionSecret,
 	cookie: { maxAge: 7 * 24 * 60 * 60 * 1000 },
-	store: new sessionstore({knex: knexsessions, tablename: 'sessions'})
+	store: new sessionstore({knex: knexsessions, tablename: 'sessions'}),
+	saveUninitialized: true,
+  resave: true
 }));
 //app.use(app.router);
 app.use(require('stylus').middleware(__dirname + '/public'));

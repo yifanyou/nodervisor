@@ -4,13 +4,13 @@
 
 exports.users = function(params) {
 	return function(req, res) {
-		
+
 		if ((!req.session.loggedIn) || (req.session.user.Role != 'Admin')) {
 			res.redirect('/login');
 		}
 
 		var saving = false;
-		
+
 		if (req.body.submit !== undefined) {
 			if (req.params.idUser) {
 				saving = true;
@@ -25,7 +25,7 @@ exports.users = function(params) {
 							Email: req.body.email,
 							Password: hash,
 							Role: req.body.role
-						}, 'id').exec(function(err, insertId){
+						}, 'id').then(function(insertId, err){
 							if (err !== null) {
 								console.log(err);
 								res.redirect('/users');
@@ -46,7 +46,7 @@ exports.users = function(params) {
 
 					params.db('users').update(info)
 						.where('id', req.params.idUser)
-						.exec(function() {
+						.then(function() {
 							res.redirect('/user/' + req.params.idUser);
 						});
 				}
@@ -58,7 +58,7 @@ exports.users = function(params) {
 				saving = true;
 				params.db('users').delete()
 					.where('id', req.params.idUser)
-					.exec(function() {
+					.then(function() {
 						res.redirect('/users');
 					});
 			}
@@ -76,7 +76,7 @@ exports.users = function(params) {
 					});
 				} else {
 					qry.where('id', req.params.idUser)
-						.exec(function(err, user){
+						.then(function(user, err){
 							res.render('edit_user', {
 								title: 'Nodervisor - Edit User',
 								user: user[0],
@@ -85,7 +85,7 @@ exports.users = function(params) {
 						});
 				}
 			} else {
-				qry.exec(function(err, users){
+				qry.then(function(users, err){
 					res.render('users', {
 						title: 'Nodervisor - Users',
 						users: users,

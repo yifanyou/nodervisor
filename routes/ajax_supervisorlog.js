@@ -60,7 +60,7 @@ exports.ajax_supervisorlog = function(params) {
 								} else {
 									res.send({result: 'error', error: err});
 								}
-								
+
 							});
 						} else {
 							supclient.tailProcessStderrLog(process, offset, length, function(err, data){

@@ -28,7 +28,8 @@ config.db = {
 	client: 'sqlite3',
 	connection: {
 		filename: './nodervisor.sqlite'
-	}
+	},
+	useNullAsDefault: true
 };
 // End of Database config
 
@@ -39,7 +40,8 @@ config.sessionstore = {
 	client: 'sqlite3',
 	connection: {
 		filename: './nv-sessions.sqlite'
-	}
+	},
+	useNullAsDefault: true
 };
 
 // Application env config
@@ -53,7 +55,7 @@ config.readHosts = function(db, callback){
 		.join('groups', 'hosts.idGroup', '=', 'groups.idGroup', 'left')
 		.select('hosts.idHost', 'hosts.Name', 'hosts.Url', 'groups.Name AS GroupName');
 
-	query.then(function(err, data){
+	query.then(function(data, err){
 		var hosts = {};
 		for (var host in data) {
 			hosts[data[host].idHost] = data[host];

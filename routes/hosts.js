@@ -13,7 +13,7 @@ exports.hosts = function(params) {
 			if (req.params.idHost) {
 				params.db('hosts').delete()
 				.where('idHost', req.params.idHost)
-				.exec(function() {
+				.then(function() {
 					params.config.readHosts(params.db, function(){
 						res.redirect('/hosts');
 					});
@@ -25,10 +25,9 @@ exports.hosts = function(params) {
 					Name: req.body.name,
 					Url: req.body.url,
 					idGroup: req.body.group,
-				}, 'idHost').exec(function(err, insertId){
+				}, 'idHost').then(function(insertId, err){
 					params.config.readHosts(params.db, function(){
-						if (err !== null) {
-							console.log(err);
+						if (err) {
 							res.redirect('/hosts');
 						} else {
 							res.redirect('/host/' + insertId);
@@ -46,7 +45,7 @@ exports.hosts = function(params) {
 
 				params.db('hosts').update(info)
 				.where('idHost', req.params.idHost)
-				.exec(function() {
+				.then(function() {
 					params.config.readHosts(params.db, function(){
 						res.redirect('/host/' + req.params.idHost);
 					});
@@ -58,7 +57,7 @@ exports.hosts = function(params) {
 			if (req.params.idHost) {
 				if (req.params.idHost == 'new') {
 					qry = params.db('groups').select('idGroup', 'Name');
-					qry.exec(function(err, groups){
+					qry.then(function(groups, err){
 						res.render('edit_host', {
 							title: 'Nodervisor - New Host',
 							host: null,
@@ -68,9 +67,9 @@ exports.hosts = function(params) {
 					});
 				} else {
 					qry.where('idHost', req.params.idHost)
-					.exec(function(err, host){
+					.then(function(host, err){
 						qry = params.db('groups').select('idGroup', 'Name');
-						qry.exec(function(err, groups){
+						qry.then(function(groups, err){
 							res.render('edit_host', {
 								title: 'Nodervisor - Edit Host',
 								host: host[0],
@@ -83,7 +82,8 @@ exports.hosts = function(params) {
 			} else {
 				qry.join('groups', 'hosts.idGroup', '=', 'groups.idGroup', 'left')
 				.select('hosts.idHost', 'hosts.Name', 'hosts.Url', 'groups.Name AS GroupName')
-				.exec(function(err, hosts){
+				.then(function(hosts, err){
+					console.log('hosts', hosts)
 					res.render('hosts', {
 						title: 'Nodervisor - Hosts',
 						hosts: hosts,

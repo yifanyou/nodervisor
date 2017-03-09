@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "lint": "ejslint ./views/*.ejs -p"
   },
   "dependencies": {
     "async": "^2.1.5",
@@ -24,5 +25,8 @@
     "sqlite3": "^3.1.8",
     "stylus": "^0.54.5",
     "supervisord": "^0.1.0"
+  },
+  "devDependencies": {
+    "ejs-lint": "^0.2.0"
   }
 }

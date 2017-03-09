@@ -10,10 +10,11 @@ exports.login = function(params) {
 		}
 
 		if (req.body.submit !== undefined) {
+			console.log(req.body)
 			var email = req.body.email;
 			params.db('users')
 				.where('Email', email)
-				.exec(function(err, user){
+				.then(function(user, err){
 					var error = 'Password failed';
 					if (!err && (user.length > 0)) {
 						bcrypt = require('bcrypt');
